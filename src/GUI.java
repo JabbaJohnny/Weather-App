@@ -19,11 +19,6 @@ public class GUI implements ActionListener {
         buttonSetup();
     }
 
-    public static void makeGUI(){
-
-    }
-
-
     private static void setup(){
         ImageIcon icon = new ImageIcon("icon.png");
         Image logo = icon.getImage();
@@ -50,8 +45,9 @@ public class GUI implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         try {
-            if(App.checkIfCityCorrect(textField.getText())){
-                tempDisplay.setText("There is " + App.getTemperature(textField.getText()) + "°C in " + textField.getText() + " right now.");
+            String city = App.changeFormatOfCity(textField.getText());
+            if(App.checkIfCityCorrect(city)){
+                tempDisplay.setText("There is " + App.getTemperature(city) + "°C in " + textField.getText() + " right now.");
             }else{
                 tempDisplay.setText("You typed wrong city name. Try again!");
             }

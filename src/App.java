@@ -3,6 +3,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.Locale;
 
 public class App {
     public static void main(String[] args) {
@@ -27,37 +28,48 @@ public class App {
     }
 
     public static String getTemperature(String city) throws Exception {
-
-
+        
         String data = getWeatherData(city);
+        
+        data = data.substring(data.indexOf("temp"));
 
-        if(data.equals("{\"message\":\"accurate\",\"cod\":\"200\",\"count\":0,\"list\":[]}") || city.equals("")){
+        String[] arrayOfParametres = data.split(",");
 
-            return "You typed wrong city name. Try again!";
-        }
+        data = arrayOfParametres[0];
 
-        String temperatureParameter = data.substring(data.indexOf("temp"));
+        double temperature = Double.parseDouble(data.substring(data.indexOf(":")+1));
 
-        String[] arrayOfParametres = temperatureParameter.split(",");
+        data = String.valueOf(temperature);
 
-        String y = arrayOfParametres[0];
-
-        double temperature = Double.parseDouble(y.substring(y.indexOf(":")+1));
-
-        String x = String.valueOf(temperature);
-
-        return x;
+        return data;
     }
 
     public static boolean checkIfCityCorrect(String city) throws Exception {
 
         String data = getWeatherData(city);
 
-        if(data.equals("{\"message\":\"accurate\",\"cod\":\"200\",\"count\":0,\"list\":[]}") || city.equals("")){
+        if(data.equals("{\"message\":\"accurate\",\"cod\":\"200\",\"count\":0,\"list\":[]}") || city.equals("") || !data.contains("temp")){
             return false;
         }
 
         return true;
+    }
+
+    public static String changeFormatOfCity(String city){
+
+        int count = city.length();
+
+        StringBuilder builder = new StringBuilder();
+
+        city = city.toLowerCase(Locale.ROOT);
+
+        for(int a = 0; a < count; a++){
+            if(city.charAt(a) != 32){
+                builder.append(city.charAt(a));
+            }
+        }
+
+        return builder.toString();
     }
 
     public static String readConfig() throws IOException {
